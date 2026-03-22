@@ -5,10 +5,11 @@ from services.service import product_service
 product_router = APIRouter(prefix="/products", tags=["Products"])
 
 @product_router.post(
+    "/",
     response_model=ProductResponse,
-    status_code=status.HTTP_200_OK,
+    status_code=status.HTTP_201_CREATED,
     responses={
-        200: {"description": "Added product"},
+        201: {"description": "Added product"},
         400: {"description": "Failed to add product"},
     }
 )
@@ -17,7 +18,7 @@ async def add_product(product: AddProduct):
     Adds products
 
     Response codes:
-    200 - successfully added product
+    201 - successfully added product
     400 - attempt to add product failed
    
     """

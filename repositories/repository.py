@@ -50,5 +50,5 @@ class ProductRepository:
         if db_product:
             self.db.delete(db_product)
             self.db.commit()
-            return True
-        return False
+            return db_product
+        return None
