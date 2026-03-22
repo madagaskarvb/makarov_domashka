@@ -51,4 +51,4 @@ class ProductService():
         
         return ProductResponse(id=prod.id, name=prod.name, price=prod.price, in_stock=prod.in_stock)
 
-    
+product_service = ProductService()
