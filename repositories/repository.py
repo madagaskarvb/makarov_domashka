@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import AddProduct, ProductORM
 from config.settings import settings
+from typing import Optional
 
 DATABASE_URL = settings.DATABASE_URL
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread":False})
@@ -29,11 +30,11 @@ class ProductRepository:
             query = query.filter(ProductORM.in_stock == in_stock)
         return query.all()
 
-    def get_by_id(self, product_id: int) -> ProductORM | None:
+    def get_by_id(self, product_id: int) -> Optional[ProductORM]:
         """Get a product by ID."""
         return self.db.query(ProductORM).filter(ProductORM.id == product_id)
 
-    def replace(self, product_id: int, product_data: AddProduct) -> ProductORM | None:
+    def replace(self, product_id: int, product_data: AddProduct) -> Optional[ProductORM]:
         """Replace a products fields."""
         db_product = self.get_by_id(product_id)
         if db_product:
@@ -43,8 +44,8 @@ class ProductRepository:
             self.db.commit()
         return db_product
 
-    def delete(self, product_id: int) -> bool:
-        """Delete a product by ID. Returns True if deleted, False if not found."""
+    def delete(self, product_id: int) -> Optional[ProductORM]:
+        """Delete a product by ID"""
         db_product = self.get_by_id(product_id)
         if db_product:
             self.db.delete(db_product)
