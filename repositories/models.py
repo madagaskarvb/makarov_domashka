@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from sqlalchemy import String, DECIMAL, Boolean, INTEGER
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, validates
 
-class User(DeclarativeBase):
+class ProductORM(DeclarativeBase):
     tablename = "products"
 
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, index=True)
@@ -17,7 +17,7 @@ class User(DeclarativeBase):
             raise ValueError("Name has to be 2-80 characters long")
         return value
 
-    @validates("age")
+    @validates("price")
     def check_non_negative(self, key, value):
         if value < 0:
             raise ValueError("Price can't be negative")
