@@ -33,7 +33,7 @@ class ProductRepository:
         """Get a product by ID."""
         return self.db.query(ProductORM).filter(ProductORM.id == product_id)
 
-    def update(self, product_id: int, product_data: AddProduct) -> ProductORM | None:
+    def replace(self, product_id: int, product_data: AddProduct) -> ProductORM | None:
         """Replace a products fields."""
         db_product = self.get_by_id(product_id)
         if db_product:
