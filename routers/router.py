@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Query
 from repositories.models import ProductResponse, AddProduct
 from services.service import product_service
 
@@ -30,4 +30,36 @@ async def add_product(product: AddProduct):
             detail="Malformed request or invalid JSON",
         )
     
-    return ProductResponse(**product_data)
+    return product_data
+
+
+@product_router.get(
+    "/",
+    response_model=list[ProductResponse],
+    status_code=status.HTTP_200_OK,
+        responses={
+        201: {"description": "Added product"},
+        400: {"description": "Failed to add product"},
+    }
+)
+async def list_products(
+    min_price: float = Query(None, description="Minimum price filter"),
+    max_price: float = Query(None, description="Maximum price filter"),
+    in_stock: bool = Query(None, description="Filter by stock status"),
+):
+    """
+    Retrieve all products with optional filters.
+
+    Response codes:
+    200 - successfully retrieved products
+    400 - failed to retrieve products
+    """
+
+    if min_price is not None and max_price is not None and min_price > max_price:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="min_price cannot be greater than max_price",
+        )
+
+    products = product_service.get_products(min_price, max_price, in_stock)
+    return products
