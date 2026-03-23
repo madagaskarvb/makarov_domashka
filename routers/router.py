@@ -65,13 +65,12 @@ async def list_products(
     return products
 
 
-
 @product_router.get(
     "/{product_id}",
     response_model=ProductResponse,
     status_code=status.HTTP_200_OK,
     responses={
-        200: {"description": "Found product"}
+        200: {"description": "Found product"},
         404: {"description": "Product not found"},
     }
 )
@@ -86,3 +85,26 @@ async def get_product(product_id: int):
             detail=f"Product with id {product_id} not found",
         )
     return product
+
+
+@product_router.put(
+    "/{product_id}",
+    response_model=ProductResponse,
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Product replaced successfully"},
+        400: {"description": "Invalid input data"},
+        404: {"description": "Product not found"},
+    }
+)
+async def replace_product(product_id: int, product: AddProduct):
+    """
+    Fully replace an existing product. All fields are required.
+    """
+    replaced = product_service.replace_product(product_id, product)
+    if replaced is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Product with id {product_id} not found",
+        )
+    return replaced
