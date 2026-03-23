@@ -38,8 +38,8 @@ async def add_product(product: AddProduct):
     response_model=list[ProductResponse],
     status_code=status.HTTP_200_OK,
         responses={
-        201: {"description": "Added product"},
-        400: {"description": "Failed to add product"},
+        200: {"description": "Retrieved products"},
+        400: {"description": "Failed to retrieve products"},
     }
 )
 async def list_products(
@@ -63,3 +63,26 @@ async def list_products(
 
     products = product_service.get_products(min_price, max_price, in_stock)
     return products
+
+
+
+@product_router.get(
+    "/{product_id}",
+    response_model=ProductResponse,
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Found product"}
+        404: {"description": "Product not found"},
+    }
+)
+async def get_product(product_id: int):
+    """
+    Retrieve a product by its ID.
+    """
+    product = product_service.get_product_by_id(product_id)
+    if product is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Product with id {product_id} not found",
+        )
+    return product
