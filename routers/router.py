@@ -108,3 +108,24 @@ async def replace_product(product_id: int, product: AddProduct):
             detail=f"Product with id {product_id} not found",
         )
     return replaced
+
+
+@product_router.delete(
+    "/{product_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {"description": "Product deleted successfully"},
+        404: {"description": "Product not found"},
+    }
+)
+async def delete_product(product_id: int):
+    """
+    Delete a product by its ID.
+    """
+    deleted = product_service.delete_product(product_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Product with id {product_id} not found",
+        )
+    return deleted

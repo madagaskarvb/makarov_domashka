@@ -1,16 +1,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import AddProduct, ProductORM
+from .models import AddProduct, ProductORM, Base
 from config.settings import settings
 from typing import Optional
 
 DATABASE_URL = settings.DATABASE_URL
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread":False})
 SessionLocal = sessionmaker(engine)
+Base.metadata.create_all(engine)
 
 class ProductRepository:
     def __init__(self):
-        self.db = SessionLocal
+        self.db = SessionLocal()
 
     def create(self, product_data: AddProduct) -> ProductORM:
         """Create a new product."""
@@ -32,7 +33,7 @@ class ProductRepository:
 
     def get_by_id(self, product_id: int) -> Optional[ProductORM]:
         """Get a product by ID."""
-        return self.db.query(ProductORM).filter(ProductORM.id == product_id)
+        return self.db.query(ProductORM).filter(ProductORM.id == product_id).first()
 
     def replace(self, product_id: int, product_data: AddProduct) -> Optional[ProductORM]:
         """Replace a products fields."""

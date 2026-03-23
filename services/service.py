@@ -31,7 +31,7 @@ class ProductService():
         if not prods:
             return None
         
-        return list(ProductResponse(id=prods.id, name=prods.name, price=prods.price, in_stock=prods.in_stock))
+        return [ProductResponse(id=p.id, name=p.name, price=p.price, in_stock=p.in_stock) for p in prods]
     
 
     def delete_product(self, product_id: int=None) -> Optional[ProductResponse]:

@@ -2,8 +2,11 @@ from pydantic import BaseModel
 from sqlalchemy import String, DECIMAL, Boolean, INTEGER
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, validates
 
-class ProductORM(DeclarativeBase):
-    tablename = "products"
+class Base(DeclarativeBase):
+    pass
+
+class ProductORM(Base):
+    __tablename__ = "products"
 
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(80))

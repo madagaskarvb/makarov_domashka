@@ -1,2 +1,7 @@
 venv/
 .env
+__pycache__/
+config/__pycache__/
+repositories/__pycache__/
+routers/__pycache__/
+service/__pycache__/

@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     JWT_ALG: str
     JWT_EXPIRY_MINUTES: int
     DATABASE_URL: str
+    APP_VERSION: str
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).parent.parent / ".env",
